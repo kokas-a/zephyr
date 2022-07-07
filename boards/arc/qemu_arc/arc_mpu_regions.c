@@ -23,12 +23,35 @@ static struct arc_mpu_region mpu_regions[] = {
 #endif /* CONFIG_COVERAGE_GCOV && CONFIG_USERSPACE */
 
 #if DT_REG_SIZE(DT_CHOSEN(zephyr_sram)) > 0
+
+/*
+ * In case if Zephyr is configured with CONFIG_XIP=n it linked into
+ * SRAM. So RAM region should have EXECUTE permission.
+ */
+#ifdef CONFIG_XIP
 	/* Region RAM */
 	MPU_REGION_ENTRY("RAM",
 			 DT_REG_ADDR(DT_CHOSEN(zephyr_sram)),
 			 DT_REG_SIZE(DT_CHOSEN(zephyr_sram)),
 			 REGION_KERNEL_RAM_ATTR | REGION_DYNAMIC),
+#else
+	/* Region RAM */
+	MPU_REGION_ENTRY("RAM_RX",
+			 (uintptr_t)__rom_region_start,
+			 (uintptr_t)__rom_region_size,
+			 REGION_ROM_ATTR),
+
+	 MPU_REGION_ENTRY("RAM_RW",
+#ifdef CONFIG_USERSPACE
+			(uintptr_t)_app_smem_start,
+#else
+			(uintptr_t)__kernel_ram_start,
 #endif
+			(uintptr_t)__kernel_ram_size,
+			REGION_RAM_ATTR),
+#endif /* CONFIG_XIP */
+
+#endif /* zephyr_sram > 0 */
 
 #if DT_REG_SIZE(DT_CHOSEN(zephyr_flash)) > 0
 	/* Region DCCM */

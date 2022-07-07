@@ -93,6 +93,11 @@ SECTIONS {
 
 #include <zephyr/linker/common-rom.ld>
 #include <zephyr/linker/thread-local-storage.ld>
+#ifdef __MWDT_LINKER_CMD__
+/* TODO: add mwdt specific ROM C++ sections */
+#else
+#include <zephyr/linker/cplusplus-rom.ld>
+#endif /* __MWDT_LINKER_CMD__ */
 
 	SECTION_PROLOGUE(_RODATA_SECTION_NAME,,) {
 		*(".rodata")
@@ -103,7 +108,6 @@ SECTIONS {
  * zephyr_linker_sources() Cmake function.
  */
 #include <snippets-rodata.ld>
-
 #include <zephyr/linker/kobject-rom.ld>
 
 #if defined(CONFIG_CPLUSPLUS) && !defined(CONFIG_CPP_STATIC_INIT_GNU) && defined(__MWDT_LINKER_CMD__)
@@ -112,16 +116,13 @@ SECTIONS {
 		KEEP(*(.ctors*))
 		_ectors = .;
 #endif /* CONFIG_CPLUSPLUS && !CONFIG_CPP_STATIC_INIT_GNU && __MWDT_LINKER_CMD__ */
+
+		MPU_ALIGN(ABSOLUTE(.) - __rom_region_start);
 	} GROUP_LINK_IN(ROMABLE_REGION)
 
-#ifdef __MWDT_LINKER_CMD__
-/* TODO: add mwdt specific ROM C++ sections */
-#else
-#include <zephyr/linker/cplusplus-rom.ld>
-#endif /* __MWDT_LINKER_CMD__ */
-
 	__rodata_region_end = .;
-	MPU_ALIGN(__rodata_region_end - __rom_region_start);
+
+	 MPU_ALIGN(__rodata_region_end - __rom_region_start);
 	__rom_region_end = .;
 	__rom_region_size = __rom_region_end - __rom_region_start;
 
