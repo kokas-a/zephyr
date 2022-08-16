@@ -8,6 +8,7 @@ common:
     - simulation
   integration_platforms:
     - native_posix
+  toolchain_exclude: arcmwdt
 tests:
   logging.log_api_deferred_overflow_rt_filter:
     extra_configs:

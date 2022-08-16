@@ -5,6 +5,7 @@ common:
   tags: log_api logging
   integration_platforms:
     - native_posix
+  toolchain_exclude: arcmwdt
 tests:
   logging.log_msg:
     extra_configs:
