@@ -2401,7 +2401,7 @@ class CMake():
         if self.warnings_as_errors:
             ldflags = "-Wl,--fatal-warnings"
             cflags = "-Werror"
-            aflags = "-Werror -Wa,--fatal-warnings"
+            aflags = "-Werror -Wa"
             gen_defines_args = "--edtlib-Werror"
         else:
             ldflags = cflags = aflags = ""
