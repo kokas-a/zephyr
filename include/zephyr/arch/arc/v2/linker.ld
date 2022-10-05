@@ -129,6 +129,10 @@ SECTIONS {
 	GROUP_END(ROMABLE_REGION)
 
 	GROUP_START(RAMABLE_REGION)
+	
+	MPU_MIN_SIZE_ALIGN
+	
+	_image_ram_start = .;
 
 #include <app_data_alignment.ld>
 
@@ -143,7 +147,6 @@ SECTIONS {
 
 #include <app_smem.ld>
 
-	_image_ram_start = _app_smem_start;
 	_app_smem_size = _app_smem_end - _app_smem_start;
 	_app_smem_rom_start = LOADADDR(_APP_SMEM_SECTION_NAME);
 #endif /* CONFIG_USERSPACE */
@@ -156,7 +159,6 @@ SECTIONS {
 		 */
 		. = ALIGN(4);
 		__bss_start = .;
-		_image_ram_start = .;
 		__kernel_ram_start = .;
 		*(".bss")
 		*(".bss.*")
@@ -218,6 +220,8 @@ SECTIONS {
 	_image_ram_end = .;
 	_end = .; /* end of image */
 
+	_image_ram_size = _image_ram_end - _image_ram_start;
+	
 	__kernel_ram_end = .;
 	__kernel_ram_size = __kernel_ram_end - __kernel_ram_start;
 

@@ -42,12 +42,8 @@ static struct arc_mpu_region mpu_regions[] = {
 			 REGION_ROM_ATTR),
 
 	 MPU_REGION_ENTRY("RAM_RW",
-#ifdef CONFIG_USERSPACE
-			(uintptr_t)_app_smem_start,
-#else
-			(uintptr_t)__kernel_ram_start,
-#endif
-			(uintptr_t)__kernel_ram_size,
+			(uintptr_t)_image_ram_start,
+			(uintptr_t)_image_ram_size,
 			REGION_RAM_ATTR),
 #endif /* CONFIG_XIP */
 

@@ -233,6 +233,7 @@ extern char _flash_used[];
 /* datas, bss, noinit */
 extern char _image_ram_start[];
 extern char _image_ram_end[];
+extern char _image_ram_size[];
 
 extern char __text_region_start[];
 extern char __text_region_end[];
@@ -439,3 +440,4 @@ static inline bool lnkr_is_region_pinned(uint8_t *addr, size_t sz)
 #endif /* ! _ASMLANGUAGE */
 
 #endif /* ZEPHYR_INCLUDE_LINKER_LINKER_DEFS_H_ */
+
