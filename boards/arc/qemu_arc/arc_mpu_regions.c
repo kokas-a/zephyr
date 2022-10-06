@@ -44,7 +44,7 @@ static struct arc_mpu_region mpu_regions[] = {
 	 MPU_REGION_ENTRY("RAM_RW",
 			(uintptr_t)_image_ram_start,
 			(uintptr_t)_image_ram_size,
-			REGION_RAM_ATTR),
+			/* REGION_RAM_ATTR*/ REGION_KERNEL_RAM_ATTR | REGION_DYNAMIC),
 #endif /* CONFIG_XIP */
 
 #endif /* zephyr_sram > 0 */
