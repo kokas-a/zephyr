@@ -220,7 +220,7 @@ SECTIONS {
 	_image_ram_end = .;
 	_end = .; /* end of image */
 
-	_image_ram_size = _image_ram_end - _image_ram_start;
+	/* _image_ram_size = _image_ram_end - _image_ram_start; */
 	
 	__kernel_ram_end = .;
 	__kernel_ram_size = __kernel_ram_end - __kernel_ram_start;
@@ -248,6 +248,16 @@ SECTIONS {
 		KEEP(*(.ARC.attributes))
 		KEEP(*(.gnu.attributes))
 	}
+
+#if !defined(CONFIG_XIP)
+	/* 	
+	 * Zephyr uses _estack as a start of heap allocation area.
+	 * Region [_estack .. sram_end] should be defined in MPU.
+	 * Including _image_ram region which is [_image_ram_start .. _image_ram_end]
+	 * we get [_image_ram_start .. sram_end] region to be defined in MPU.
+	 */
+	__rw_sram_size = SRAM_START + SRAM_SIZE - _image_ram_start;
+#endif 
 
 	/DISCARD/ : {
 #if defined(CONFIG_CPLUSPLUS) && !defined(CONFIG_CPP_STATIC_INIT_GNU) && defined(__MWDT_LINKER_CMD__)

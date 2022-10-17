@@ -8,6 +8,8 @@
 #include <zephyr/arch/arc/v2/mpu/arc_mpu.h>
 #include <zephyr/linker/linker-defs.h>
 
+extern char __rw_sram_size[];
+
 /*
  * for secure firmware, MPU entries are only set up for secure world.
  * All regions not listed here are shared by secure world and normal world.
@@ -43,7 +45,7 @@ static struct arc_mpu_region mpu_regions[] = {
 
 	 MPU_REGION_ENTRY("RAM_RW",
 			(uintptr_t)_image_ram_start,
-			(uintptr_t)_image_ram_size,
+			(uintptr_t)__rw_sram_size,
 			/* REGION_RAM_ATTR*/ REGION_KERNEL_RAM_ATTR | REGION_DYNAMIC),
 #endif /* CONFIG_XIP */
 
