@@ -344,6 +344,8 @@ static ALWAYS_INLINE void arch_nop(void)
 	__builtin_arc_nop();
 }
 
+extern char __arc_rw_sram_size[];
+
 #endif /* _ASMLANGUAGE */
 
 #ifdef __cplusplus

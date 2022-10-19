@@ -6,9 +6,8 @@
 
 #include <zephyr/devicetree.h>
 #include <zephyr/arch/arc/v2/mpu/arc_mpu.h>
+#include <zephyr/arch/arc/arch.h>
 #include <zephyr/linker/linker-defs.h>
-
-extern char __rw_sram_size[];
 
 /*
  * for secure firmware, MPU entries are only set up for secure world.

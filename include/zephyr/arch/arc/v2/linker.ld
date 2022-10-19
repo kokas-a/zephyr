@@ -129,9 +129,9 @@ SECTIONS {
 	GROUP_END(ROMABLE_REGION)
 
 	GROUP_START(RAMABLE_REGION)
-	
+
 	MPU_MIN_SIZE_ALIGN
-	
+
 	_image_ram_start = .;
 
 #include <app_data_alignment.ld>
@@ -219,8 +219,6 @@ SECTIONS {
 	/* Define linker symbols */
 	_image_ram_end = .;
 	_end = .; /* end of image */
-
-	/* _image_ram_size = _image_ram_end - _image_ram_start; */
 	
 	__kernel_ram_end = .;
 	__kernel_ram_size = __kernel_ram_end - __kernel_ram_start;
@@ -256,7 +254,7 @@ SECTIONS {
 	 * Including _image_ram region which is [_image_ram_start .. _image_ram_end]
 	 * we get [_image_ram_start .. sram_end] region to be defined in MPU.
 	 */
-	__rw_sram_size = SRAM_START + SRAM_SIZE - _image_ram_start;
+	__arc_rw_sram_size = SRAM_START + SRAM_SIZE - _image_ram_start;
 #endif 
 
 	/DISCARD/ : {
