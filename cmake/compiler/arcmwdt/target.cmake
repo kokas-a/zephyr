@@ -22,26 +22,6 @@ list(APPEND CMAKE_REQUIRED_FLAGS
   )
 string(REPLACE ";" " " CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
 
-set(NOSTDINC "")
-
-if(CONFIG_ARCMWDT_LIBC)
- list(APPEND NOSTDINC ${TOOLCHAIN_HOME}/arc/inc)
-endif()
-
-if(CONFIG_ARCMWDT_LIBC AND CONFIG_LIB_CPLUSPLUS)
-  list(APPEND NOSTDINC ${TOOLCHAIN_HOME}/arc/lib/src/c++/inc)
-endif()
-
-# For CMake to be able to test if a compiler flag is supported by the
-# toolchain we need to give CMake the necessary flags to compile and
-# link a dummy C file.
-#
-# CMake checks compiler flags with check_c_compiler_flag() (Which we
-# wrap with target_cc_option() in extensions.cmake)
-foreach(isystem_include_dir ${NOSTDINC})
-  list(APPEND isystem_include_flags -isystem "\"${isystem_include_dir}\"")
-endforeach()
-
 # common compile options, no copyright msg, little-endian, no small data,
 # no MWDT stack checking
 list(APPEND TOOLCHAIN_C_FLAGS -Hnocopyr -HL -Hnosdata -Hoff=Stackcheck_alloca)

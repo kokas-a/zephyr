@@ -116,7 +116,7 @@ set_compiler_property(PROPERTY warning_error_misra_sane -Werror=vla)
 set_compiler_property(PROPERTY cstd -std=)
 
 if (NOT CONFIG_ARCMWDT_LIBC)
-  set_compiler_property(PROPERTY nostdinc -Hnoarcexlib)
+  set_compiler_property(PROPERTY nostdinc -Hno_default_include -Hnoarcexlib)
 endif()
 
 # C++ std options

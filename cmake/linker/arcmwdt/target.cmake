@@ -198,6 +198,8 @@ macro(toolchain_ld_cpp)
   )
 endmacro()
 
+set_property(TARGET linker PROPERTY required "-I${TOOLCHAIN_HOME}/arc/inc")
+
 # use linker for relocation
 macro(toolchain_ld_relocation)
   set(MEM_RELOCATION_LD   "${PROJECT_BINARY_DIR}/include/generated/linker_relocate.ld")
