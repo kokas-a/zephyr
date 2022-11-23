@@ -11,7 +11,8 @@ zephyr_library_sources(
   fault_s.S
   irq_manage.c
   timestamp.c
-  isr_wrapper.S
+#  isr_wrapper.S
+  isr_wrapper_my.S
   regular_irq.S
   switch.S
   prep_c.c

@@ -203,46 +203,46 @@ From RIRQ:
 
 SECTION_FUNC(TEXT, _isr_wrapper)
 #ifdef CONFIG_ARC_FIRQ
-#if CONFIG_RGF_NUM_BANKS == 1
-/* free r0 here, use r0 to check whether irq is firq.
- * for rirq,  as sp will not change and r0 already saved, this action
- * in fact is useless
- * for firq,  r0 will be restored later
- */
-	push r0
-#endif
+	#if CONFIG_RGF_NUM_BANKS == 1
+	/* free r0 here, use r0 to check whether irq is firq.
+	 * for rirq,  as sp will not change and r0 already saved, this action
+	 * in fact is useless
+	 * for firq,  r0 will be restored later
+	 */
+		push r0
+	#endif /* CONFIG_RGF_NUM_BANKS == 1 */
 	lr r0, [_ARC_V2_AUX_IRQ_ACT]
 	ffs r0, r0
 	cmp r0, 0
-#if CONFIG_RGF_NUM_BANKS == 1
-	bnz rirq_path
-	pop r0
-	/* 1-register bank FIRQ handling must save registers on stack */
-	_create_irq_stack_frame
-	lr r0, [_ARC_V2_STATUS32_P0]
-	st_s r0, [sp, ___isf_t_status32_OFFSET]
-	st ilink, [sp, ___isf_t_pc_OFFSET]
+	#if CONFIG_RGF_NUM_BANKS == 1
+		bnz rirq_path
+		pop r0
+		/* 1-register bank FIRQ handling must save registers on stack */
+		_create_irq_stack_frame
+		lr r0, [_ARC_V2_STATUS32_P0]
+		st_s r0, [sp, ___isf_t_status32_OFFSET]
+		st ilink, [sp, ___isf_t_pc_OFFSET]
 
-	mov_s r3, _firq_exit
-	mov_s r2, _firq_enter
-	j_s [r2]
-rirq_path:
-	add sp, sp, 4
-	mov_s r3, _rirq_exit
-	mov_s r2, _rirq_enter
-	j_s [r2]
-#else
-	mov.z r3, _firq_exit
-	mov.z r2, _firq_enter
-	mov.nz r3, _rirq_exit
-	mov.nz r2, _rirq_enter
-	j_s [r2]
-#endif
-#else
+		mov_s r3, _firq_exit
+		mov_s r2, _firq_enter
+		j_s [r2]
+	rirq_path:
+		add sp, sp, 4
+		mov_s r3, _rirq_exit
+		mov_s r2, _rirq_enter
+		j_s [r2]
+	#else
+		mov.z r3, _firq_exit
+		mov.z r2, _firq_enter
+		mov.nz r3, _rirq_exit
+		mov.nz r2, _rirq_enter
+		j_s [r2]
+	#endif /* CONFIG_RGF_NUM_BANKS == 1 */
+#else /* !CONFIG_ARC_FIRQ */
 	MOVR r3, _rirq_exit
 	MOVR r2, _rirq_enter
 	j_s [r2]
-#endif
+#endif /* CONFIG_ARC_FIRQ */
 
 /* r0, r1, and r3 will be used in exit_tickless_idle macro */
 .macro exit_tickless_idle
