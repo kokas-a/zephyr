@@ -1,0 +1,6 @@
+identifier: bb_min
+name: Beagle Board Min
+type: mcu
+arch: arc
+toolchain:
+  - zephyr

@@ -44,7 +44,7 @@ Z_GENERIC_SECTION(.vt_pointer_section) __attribute__((used))
 void *_vector_table_pointer;
 #endif
 
-#if defined(CONFIG_AARCH32_ARMV8_R)
+#if defined(CONFIG_AARCH32_ARMV8_R) || defined(CONFIG_CPU_CORTEX_A8)
 
 #define VECTOR_ADDRESS ((uintptr_t)_vector_start)
 

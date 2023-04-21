@@ -1,0 +1,2 @@
+
+#include <zephyr/arch/arm/cortex_a_r/scripts/linker.ld>

@@ -1,0 +1,6 @@
+config BOARD_BB_MIN
+	bool "BeagleBone-based Miner control board"
+	depends on SOC_TI_AM33XX
+	help
+	  Reduced version of BeagleBone Black board. Reduced to 600MHz Freq.
+	  With no USB, no video, no eMMC, but with NAND.

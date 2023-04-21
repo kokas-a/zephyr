@@ -1,0 +1,4 @@
+config SOC_TI_AM33XX
+	bool "ti am33xx soc"
+	select ARM
+	select CPU_CORTEX_A8

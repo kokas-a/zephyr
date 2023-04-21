@@ -1,0 +1,28 @@
+if SOC_TI_AM33XX
+
+config SOC
+	default "ti_am33xx"
+
+config ARM_CUSTOM_INTERRUPT_CONTROLLER
+	default y
+
+config AM33XX_INTC
+	bool "ti am33xx interrupt controller"
+	default y
+
+config AM33XX_TIMER
+	bool "ti am33xx timer"
+	default y
+
+config NUM_IRQS
+	default 125
+
+config SYS_CLOCK_HW_CYCLES_PER_SEC
+#	default 600000000
+	default 32768
+
+config UART_NS16550_ACCESS_WORD_ONLY
+	default y
+	depends on UART_NS16550
+
+endif # SOC_TI_AM33XX

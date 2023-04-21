@@ -1,0 +1,45 @@
+#include <arm/armv7-a.dtsi>
+
+/ {
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cpu@0 {
+			compatible = "arm,cortex-a8";
+			device_type = "cpu";
+			reg = <0>;
+		};
+	};
+
+	soc {
+
+		intc: am33xx-intc@48200000 {
+			compatible = "ti,am33xx-intc";
+			interrupt-controller;
+			#interrupt-cells = <2>;
+			reg = <0x48200000 0x1000>;
+		};
+
+		uart0: serial@44e09000 {
+			/* compatible = "ti,am33xx-uart"; */
+			compatible = "ns16550";
+			clock-frequency = <48000000>;
+			reg = <0x44e09000 0x2000>;
+			interrupts = <72 2>;
+			interrupt-parent = <&intc>;
+			status = "disabled";
+			reg-shift = <2>;
+		};
+
+		timer1: timer@44e31000 {
+			compatible = "ti,am335x-timer-1ms";
+			reg = <0x44e31000 0x400>;
+			clock-frequency = <32768>;
+			interrupts = <67 3>;
+			interrupt-parent = <&intc>;
+			status = "disabled";
+		};
+	};
+
+};

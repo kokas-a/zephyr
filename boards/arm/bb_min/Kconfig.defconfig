@@ -1,0 +1,9 @@
+
+if BOARD_BB_MIN
+
+config BOARD
+	default "bb_min"
+
+# TODO
+
+endif #BOARD_BB_MIN
