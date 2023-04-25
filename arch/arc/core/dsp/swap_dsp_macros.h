@@ -265,7 +265,9 @@ agu_skip_load :
 	lr	 r0, [_ARC_V2_DSP_BUILD]
 	bmsk r0, r0, 7
 	breq r0, 0, skip_dsp_setup
+#ifdef CONFIG_ARC_DSP_TURNED_OFF
 	mov	 r0, 0 /* DSP_CTRL_DISABLED_ALL */
 	sr	 r0, [_ARC_V2_DSP_CTRL]
+#endif
 skip_dsp_setup :
 .endm
