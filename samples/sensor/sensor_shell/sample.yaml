@@ -5,6 +5,7 @@ tests:
     integration_platforms:
       - frdm_k64f
     filter: ( CONFIG_UART_CONSOLE and CONFIG_SERIAL_SUPPORT_INTERRUPT )
+    platform_exclude: nsim_hs6x_smp
     tags: shell
     harness: keyboard
     min_ram: 20
