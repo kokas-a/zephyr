@@ -77,7 +77,12 @@ class Priority:
         for idx, level in enumerate(_DEVICE_INIT_LEVELS):
             if level in name:
                 _, priority_str = name.strip("_").split(level)
-                priority, sub_priority = priority_str.split("_")
+
+                # ARCMWDT linker generates extended section names
+                # (ex.: .rela.z_init_POST_KERNEL40_0_.__init_k_sys_work_q_init).
+                # limitation is required for reading only 2 parameters from
+                # priority string.
+                priority, sub_priority = priority_str.split("_")[:2]
                 self._level = idx
                 self._priority = int(priority)
                 self._sub_priority = int(sub_priority)
