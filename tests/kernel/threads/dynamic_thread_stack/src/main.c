@@ -17,6 +17,7 @@
 
 #define MAX_HEAP_STACKS (CONFIG_HEAP_MEM_POOL_SIZE / STACK_OBJ_SIZE)
 
+
 ZTEST_DMEM bool tflag[MAX(CONFIG_DYNAMIC_THREAD_POOL_SIZE, MAX_HEAP_STACKS)];
 
 static void func(void *arg1, void *arg2, void *arg3)
@@ -98,6 +99,12 @@ ZTEST(dynamic_thread_stack, test_dynamic_thread_stack_alloc)
 		ztest_test_skip();
 	}
 
+	printk("MAX_HEAP_STACKS = 0x%x\r\n", MAX_HEAP_STACKS);
+	printk("CONFIG_HEAP_MEM_POOL_SIZE = 0x%x\r\n", CONFIG_HEAP_MEM_POOL_SIZE);
+	printk("STACK_OBJ_SIZE = 0x%x\r\n", STACK_OBJ_SIZE);
+	printk("CONFIG_DYNAMIC_THREAD_STACK_SIZE= 0x%x\r\n", CONFIG_DYNAMIC_THREAD_STACK_SIZE);
+	printk("CONFIG_PRIVILEGED_STACK_SIZE= 0x%x\r\n", CONFIG_PRIVILEGED_STACK_SIZE);
+
 	/* allocate all thread stacks from the heap */
 	for (N = 0; N < MAX_HEAP_STACKS; ++N) {
 		stack[N] = k_thread_stack_alloc(CONFIG_DYNAMIC_THREAD_STACK_SIZE,
@@ -114,6 +121,11 @@ ZTEST(dynamic_thread_stack, test_dynamic_thread_stack_alloc)
 					 CONFIG_DYNAMIC_THREAD_STACK_SIZE, func,
 					 &tflag[i], NULL, NULL, 0,
 					 K_USER | K_INHERIT_PERMS, K_NO_WAIT);
+
+		printk("stack  [%d]=0x%08x - 0x%08x\r\n", i, (uint32_t)stack[i], ((uint32_t)stack[i]) + CONFIG_DYNAMIC_THREAD_STACK_SIZE);
+		printk("-priv  [%d]=0x%08x - 0x%08x\r\n", i, (uint32_t)th[i].arch.priv_stack_start, \
+				((uint32_t)th[i].arch.priv_stack_start) + CONFIG_PRIVILEGED_STACK_SIZE);
+		printk("-kcs.sp[%d]=0x%08x\r\n", i, (uint32_t)th[i].callee_saved.sp);
 	}
 
 	/* join all threads and check that flags have been set */
@@ -121,6 +133,8 @@ ZTEST(dynamic_thread_stack, test_dynamic_thread_stack_alloc)
 		zassert_ok(k_thread_join(tid[i], K_MSEC(TIMEOUT_MS)));
 		zassert_true(tflag[i]);
 	}
+
+	printk("try to clean stacks\r\n");
 
 	/* clean up stacks allocated from the heap */
 	for (size_t i = 0; i < N; ++i) {

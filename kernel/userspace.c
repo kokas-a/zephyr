@@ -342,7 +342,7 @@ static struct z_object *dynamic_object_create(enum k_objects otype, size_t align
 			((uint8_t *)dyn->data + adjusted_size - sizeof(*stack_data));
 		stack_data->priv = (uint8_t *)dyn->data;
 		dyn->kobj.data.stack_data = stack_data;
-#ifdef CONFIG_ARM_MPU
+#if (defined CONFIG_ARM_MPU) || defined (CONFIG_ARC_MPU)
 		dyn->kobj.name = (void *)ROUND_UP(
 			  ((uint8_t *)dyn->data + CONFIG_PRIVILEGED_STACK_SIZE),
 			  Z_THREAD_STACK_OBJ_ALIGN(size));
