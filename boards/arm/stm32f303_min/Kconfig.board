@@ -1,0 +1,9 @@
+# STM32 Minimum Development Board Configuration
+
+# Copyright (c) 2017, embedjournal.com
+# SPDX-License-Identifier: Apache-2.0
+
+config BOARD_STM32F303_MIN
+	bool "STM32 Minimum Development Board (303)"
+	depends on SOC_STM32F303XC
+

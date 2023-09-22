@@ -1,0 +1,11 @@
+# STM32 Minimum Development Board Configuration
+
+# Copyright (c) 2017, embedjournal.com
+# SPDX-License-Identifier: Apache-2.0
+
+if BOARD_STM32F303_MIN
+
+config BOARD
+	default "stm32f303_min" if BOARD_STM32F303_MIN
+
+endif # BOARD_STM32F303_MIN

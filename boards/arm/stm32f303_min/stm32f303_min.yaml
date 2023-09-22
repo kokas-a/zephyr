@@ -1,0 +1,14 @@
+identifier: stm32f303_min
+name: STM32 Minimum Development Board (303)
+type: mcu
+arch: arm
+toolchain:
+  - zephyr
+  - gnuarmemb
+  - xtools
+ram: 32
+supported:
+  - i2c
+  - pwm
+  - spi
+  - adc
