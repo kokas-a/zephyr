@@ -3,6 +3,8 @@
 zephyr_library()
 
 zephyr_library_sources(
+	inv.S
+	cm.c
   soc.c
   )
 

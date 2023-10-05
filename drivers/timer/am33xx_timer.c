@@ -89,78 +89,18 @@ static uint32_t am335x_timer_check_id(void)
 	id = am335x_timer_read32(am33xx_timer_base + AM335X_TIMER_TIDR);
 	id &= 0xFF;
 
-	//printk("\r\nTimer ID = 0x%x\r\n", id);
-
 	return (id ? 0 : -ENODEV);
 }
 
 /******************************************************************************
  *
  */
-#define CLKSEL_TIMER1MS_CLK (0x28)
-
-#define CLKSEL_TIMER1MS_CLK_SEL_MASK (0x7 << 0)
-#define CLKSEL_TIMER1MS_CLK_SEL_SEL1 (0x0 << 0)
-/* Select CLK_M_OSC clock */
-#define CLKSEL_TIMER1MS_CLK_SEL_SEL2 (0x1 << 0)
-
-#define CM_WKUP_TIMER1_CLKCTRL  (0xC4)
-
-#define CM_MODULEMODE_MASK        (0x3 << 0)
-#define CM_MODULEMODE_ENABLE      (0x2 << 0)
-#define CM_MODULEMODE_DISABLED    (0x0 << 0)
-#define CM_CLKCTRL_IDLEST         (0x3 << 16)
-#define CM_CLKCTRL_IDLEST_FUNC    (0x0 << 16)
-#define CM_CLKCTRL_IDLEST_TRANS   (0x1 << 16)
-#define CM_CLKCTRL_IDLEST_IDLE    (0x2 << 16)
-#define CM_CLKCTRL_IDLEST_DISABLE (0x3 << 16)
-
-__attribute__((unused))
-static uint32_t am335x_timer_hw_bringup(void)
-{
-    uint32_t val;
-
-    /* disable the module and wait for the module to be disabled */
-    val = am335x_timer_read32(0x44E00400 + CM_WKUP_TIMER1_CLKCTRL);
-    val &= ~CM_MODULEMODE_MASK;
-    val |= (CM_MODULEMODE_DISABLED & CM_MODULEMODE_MASK);
-    am335x_timer_write32(0x44E00400 +  CM_WKUP_TIMER1_CLKCTRL, val);
-
-    while ((am335x_timer_read32(0x44E00400 + CM_WKUP_TIMER1_CLKCTRL) & CM_CLKCTRL_IDLEST)
-           != CM_CLKCTRL_IDLEST_DISABLE) {
-        ;
-    }
-
-    val = am335x_timer_read32(0x44E00500 +  CLKSEL_TIMER1MS_CLK);
-    val &= ~CLKSEL_TIMER1MS_CLK_SEL_MASK;
-    val |= (CLKSEL_TIMER1MS_CLK_SEL_SEL2 & CLKSEL_TIMER1MS_CLK_SEL_MASK);
-    am335x_timer_write32(0x44E00500 + CLKSEL_TIMER1MS_CLK, val);
-
-    while ((am335x_timer_read32(0x44E00500 + CLKSEL_TIMER1MS_CLK) &
-            CLKSEL_TIMER1MS_CLK_SEL_MASK) !=
-           CLKSEL_TIMER1MS_CLK_SEL_SEL2) {
-        ;
-    }
-
-    /* enable the module and wait for the module to be ready */
-    val = am335x_timer_read32(0x44E00400 + CM_WKUP_TIMER1_CLKCTRL);
-    val &= ~CM_MODULEMODE_MASK;
-    val |= (CM_MODULEMODE_ENABLE & CM_MODULEMODE_MASK);
-    am335x_timer_write32(0x44E00400 + CM_WKUP_TIMER1_CLKCTRL, val);
-
-    while ((am335x_timer_read32(0x44E00400 + CM_WKUP_TIMER1_CLKCTRL) & CM_CLKCTRL_IDLEST)
-           != CM_CLKCTRL_IDLEST_FUNC) {
-        ;
-    }
-
-    return 0;
-}
-
 static int sys_clock_driver_init(void)
 {
 	uint32_t reg_val;
+	const int irq_num = DT_INST_IRQN(0);
+	const int irq_prio = DT_INST_IRQ(0, priority);
 
-	am335x_timer_hw_bringup();
 	am335x_timer_check_id();
 
 	am335x_timer_write32(am33xx_timer_base + AM335X_TIMER_TPIR, 232000);
@@ -170,7 +110,7 @@ static int sys_clock_driver_init(void)
 	am335x_timer_write32(am33xx_timer_base + AM335X_TIMER_TLDR, reg_val);
 	am335x_timer_write32(am33xx_timer_base + AM335X_TIMER_TCRR, reg_val);
 
-	IRQ_CONNECT(DT_INST_IRQN(0), DT_INST_IRQ(0, priority), timer_isr, NULL, 0);
+	IRQ_CONNECT(irq_num , irq_prio, timer_isr, NULL, 0);
 
 	/* Set up overflow interrupt */
 	reg_val = AM335X_TISR_MAT_IT_FLAG | AM335X_TISR_OVF_IT_FLAG | AM335X_TISR_TCAR_IT_FLAG;

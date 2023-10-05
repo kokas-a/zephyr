@@ -50,17 +50,6 @@ static inline void relocate_vector_table(void)
 	barrier_isync_fence_full();
 }
 
-#elif defined(CONFIG_CPU_AARCH32_CORTEX_A)
-#warning Unify with previous ifdef branch
-#define VECTOR_ADDRESS ((uintptr_t)_vector_start)
-
-static inline void relocate_vector_table(void)
-{
-	write_sctlr(read_sctlr() & ~HIVECS);
-	write_vbar(VECTOR_ADDRESS & VBAR_MASK);
-	__ISB();
-}
-
 #else
 #define VECTOR_ADDRESS 0
 

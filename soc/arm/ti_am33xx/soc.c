@@ -19,3 +19,14 @@ const struct arm_mmu_config mmu_config = {
 	.num_regions = ARRAY_SIZE(mmu_regions),
 	.mmu_regions = mmu_regions,
 };
+
+#if defined(CONFIG_PLATFORM_SPECIFIC_INIT)
+extern void ti_am335x_inv_all_test(void);
+
+void z_arm_platform_init(void)
+{
+	ti_am335x_inv_all_test();
+
+	am335x_cm_bringup();
+}
+#endif

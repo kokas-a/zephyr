@@ -61,10 +61,17 @@
 #define SIR_IRQ_ACTIVE_MASK		0x7f
 #define SIR_IRQ_SPURIOUS_MASK	0xFFFFFF80
 
+/* INTC_SYSSTATUS: ResetDone */
+#define INTC_SYSSTATUS_RST_DONE 0x1
+
+#define INTC_THRESHOLD_DISABLE	(0xff)
+
 static const uint32_t am33xx_intc_base = DT_INST_REG_ADDR(0);
 
 #define am335x_intc_read32(a)            (*(volatile uint32_t *)(a))
 #define am335x_intc_write32(a, v)        (*(volatile uint32_t *)(a) = (v))
+
+static uint8_t threshold = INTC_THRESHOLD_DISABLE;
 
 void z_soc_irq_enable(unsigned int irq)
 {
@@ -99,8 +106,11 @@ int z_soc_irq_is_enabled(unsigned int irq)
 void z_soc_irq_priority_set(
 	unsigned int irq, unsigned int prio, unsigned int flags)
 {
-	/* FIXME: normalize OS prio to HW */
+	uint32_t offs = irq * 4;
 
+	offs += AM33XX_INTC_ILR0;
+
+	am335x_intc_write32((am33xx_intc_base + offs), (prio & 0x3f) << 2);
 }
 
 void z_soc_irq_sw_trigger(int irq)
@@ -115,8 +125,16 @@ void z_soc_irq_sw_trigger(int irq)
 unsigned int z_soc_irq_get_active(void)
 {
 	uint32_t irq;
+	uint32_t prio;
 
+	prio = am335x_intc_read32(am33xx_intc_base + AM33XX_INTC_IRQ_PRIORITY);
 	irq = am335x_intc_read32(am33xx_intc_base + AM33XX_INTC_SIR_IRQ);
+
+	/* Set threshold for nesting irq */
+	threshold = am335x_intc_read32(am33xx_intc_base + AM33XX_INTC_THRESHOLD);
+	am335x_intc_write32((am33xx_intc_base + AM33XX_INTC_THRESHOLD), prio);
+
+	am335x_intc_write32((am33xx_intc_base + AM33XX_INTC_CONTROL), CONTROL_NEW_IRQ_GEN);
 
 	return (irq & SIR_IRQ_ACTIVE_MASK);
 }
@@ -124,10 +142,19 @@ unsigned int z_soc_irq_get_active(void)
 void z_soc_irq_eoi(unsigned int irq)
 {
 	am335x_intc_write32((am33xx_intc_base + AM33XX_INTC_CONTROL), CONTROL_NEW_IRQ_GEN);
+	am335x_intc_write32((am33xx_intc_base + AM33XX_INTC_THRESHOLD), threshold);
 }
 
+/* 0 - highest prio */
 void z_soc_irq_init(void)
 {
+	am335x_intc_write32(am33xx_intc_base + AM33XX_INTC_SYSCONFIG, 0x2);
+    while ((am335x_intc_read32(am33xx_intc_base + AM33XX_INTC_SYSSTATUS) & INTC_SYSSTATUS_RST_DONE)
+           != INTC_SYSSTATUS_RST_DONE) {
+        ;
+    }
+
+	am335x_intc_write32((am33xx_intc_base + AM33XX_INTC_THRESHOLD), threshold);
 	/* mask all interrupts */
 	am335x_intc_write32((am33xx_intc_base + AM33XX_INTC_MIR_SET0), 0xFFFFFFFF);
 	am335x_intc_write32((am33xx_intc_base + AM33XX_INTC_MIR_SET1), 0xFFFFFFFF);
