@@ -206,6 +206,15 @@ static inline void trigger_irq(int irq)
 	z_vim_arm_enter_irq(irq);
 }
 
+#elif defined CONFIG_ARM_CUSTOM_INTERRUPT_CONTROLLER
+
+void z_soc_irq_sw_trigger(int irq);
+
+static inline void trigger_irq(int irq)
+{
+	z_soc_irq_sw_trigger(irq);
+}
+
 #else
 /* So far, Nios II does not support this */
 #define NO_TRIGGER_FROM_SW

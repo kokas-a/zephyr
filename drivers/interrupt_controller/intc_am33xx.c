@@ -103,6 +103,15 @@ void z_soc_irq_priority_set(
 
 }
 
+void z_soc_irq_sw_trigger(int irq)
+{
+	uint32_t isr_num = irq / 32;
+	uint32_t irq_offs = irq % 32;
+	uint32_t isr_addr = AM33XX_INTC_ISR_SET0 + 0x20 * isr_num;
+
+	am335x_intc_write32((am33xx_intc_base + isr_addr), (1 << irq_offs));
+}
+
 unsigned int z_soc_irq_get_active(void)
 {
 	uint32_t irq;
