@@ -198,7 +198,7 @@ static TIME_CONSTEXPR inline int sys_clock_hw_cycles_per_sec(void)
 	 z_tmcvt_gen_64_slow(__t, __from_hz, __to_hz, __round_up, __round_off))
 
 /* Convert, generating a 32-bit result */
-#define z_tmcvt_32(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off) \
+#define __z_tmcvt_32(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off) \
 	((__const_hz) ?							\
 	 (								\
 		 z_tmcvt_is_identity(__from_hz, __to_hz) ?		\
@@ -217,7 +217,7 @@ static TIME_CONSTEXPR inline int sys_clock_hw_cycles_per_sec(void)
 		)
 
 /* Convert, generating a 64-bit result */
-#define z_tmcvt_64(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off) \
+#define __z_tmcvt_64(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off) \
 	((__const_hz) ?							\
 	 (								\
 		 z_tmcvt_is_identity(__from_hz, __to_hz) ?		\
@@ -235,10 +235,47 @@ static TIME_CONSTEXPR inline int sys_clock_hw_cycles_per_sec(void)
 	 z_tmcvt_gen_64_slow(__t, __from_hz, __to_hz, __round_up, __round_off) \
 		)
 
-#define z_tmcvt(__t, __from_hz, __to_hz, __const_hz, __result32, __round_up, __round_off) \
+#define __z_tmcvt(__t, __from_hz, __to_hz, __const_hz, __result32, __round_up, __round_off) \
 	((__result32) ?							\
 	 z_tmcvt_32(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off) : \
 	 z_tmcvt_64(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off))
+
+#if 0
+static TIME_CONSTEXPR ALWAYS_INLINE uint32_t z_tmcvt_32(uint32_t t, uint32_t from_hz,
+						  uint32_t to_hz, bool const_hz,
+						  bool round_up,  bool round_off)
+{
+	__asm__ volatile ("nop\n nop\n nop\n nop\n nop\n" :::"memory");
+
+	return __z_tmcvt_64(t, from_hz, to_hz, const_hz, round_up, round_off);
+}
+
+static TIME_CONSTEXPR ALWAYS_INLINE uint64_t z_tmcvt_64(uint64_t t, uint32_t from_hz,
+						  uint32_t to_hz, bool const_hz,
+						  bool round_up,  bool round_off)
+{
+	__asm__ volatile ("nop\n nop\n nop\n nop\n nop\n" :::"memory");
+
+	return __z_tmcvt_64(t, from_hz, to_hz, const_hz, round_up, round_off);
+}
+#endif
+
+#if 1
+#define z_tmcvt_64(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off) \
+		( __z_tmcvt_64(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off) ) ? \
+				( __z_tmcvt_64(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off) ): 1
+
+#define z_tmcvt_32(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off) \
+		( __z_tmcvt_32(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off) ) ? \
+				( __z_tmcvt_32(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off) ): 1
+#else
+#define z_tmcvt_64(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off) \
+		( __z_tmcvt_64(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off) )
+
+#define z_tmcvt_32(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off) \
+		( __z_tmcvt_32(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off) )
+#endif
+
 
 /* The following code is programmatically generated using this perl
  * code, which enumerates all possible combinations of units, rounding
