@@ -241,18 +241,27 @@ static TIME_CONSTEXPR inline int sys_clock_hw_cycles_per_sec(void)
 	 z_tmcvt_64(__t, __from_hz, __to_hz, __const_hz, __round_up, __round_off))
 
 
+#include <zephyr/sys/printk.h>
+
 static TIME_CONSTEXPR ALWAYS_INLINE uint32_t z_tmcvt_32(uint32_t t, uint32_t from_hz,
 						  uint32_t to_hz, bool const_hz,
 						  bool round_up,  bool round_off)
 {
-	return __z_tmcvt_32(t, from_hz, to_hz, const_hz, round_up, round_off);
+	uint32_t retval = __z_tmcvt_32(t, from_hz, to_hz, const_hz, round_up, round_off);
+
+	printk("32(ret: 0x%x): 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x\r\n", \
+			retval, t, from_hz, to_hz, const_hz, round_up, round_off);
+	return retval;
 }
 
 static TIME_CONSTEXPR ALWAYS_INLINE uint64_t z_tmcvt_64(uint64_t t, uint32_t from_hz,
 						  uint32_t to_hz, bool const_hz,
 						  bool round_up,  bool round_off)
 {
-	return __z_tmcvt_64(t, from_hz, to_hz, const_hz, round_up, round_off);
+	uint64_t retval = __z_tmcvt_64(t, from_hz, to_hz, const_hz, round_up, round_off);
+	printk("64(ret: 0x%llx): 0x%llx, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x\r\n", \
+			retval, t, from_hz, to_hz, const_hz, round_up, round_off);
+	return retval;
 }
 
 
