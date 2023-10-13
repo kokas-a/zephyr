@@ -151,6 +151,9 @@ done_mpu_regions_reset:
 #endif
 #endif
 
+	mov r4, 0xe01
+	sr  r4, [0x700]
+
 #if defined(CONFIG_SMP) || CONFIG_MP_MAX_NUM_CPUS  > 1
 	_get_cpu_id r0
 	breq r0, 0, _master_core_startup
