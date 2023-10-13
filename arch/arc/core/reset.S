@@ -154,6 +154,18 @@ done_mpu_regions_reset:
 	mov r4, 0xe01
 	sr  r4, [0x700]
 
+	/* zero the .noinit: [__bss_end .. __data_start] */
+    mov   r0, __device_states_start
+    mov   r1, __device_states_end
+
+	mov   r2, 0x0
+_dev_st_init:
+
+    st 	  r2, [r0, 0]
+    add   r0, r0, 4
+    BRLT  r0, r1, _dev_st_init        /* loop while r0 < r1 */
+
+
 #if defined(CONFIG_SMP) || CONFIG_MP_MAX_NUM_CPUS  > 1
 	_get_cpu_id r0
 	breq r0, 0, _master_core_startup

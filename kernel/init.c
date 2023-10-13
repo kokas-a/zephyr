@@ -137,6 +137,7 @@ void __weak z_early_memcpy(void *dst, const void *src, size_t n)
  *
  * This routine clears the BSS region, so all bytes are 0.
  */
+extern char __data_region_start[];
 __boot_func
 void z_bss_zero(void)
 {
@@ -150,6 +151,7 @@ void z_bss_zero(void)
 	}
 
 	z_early_memset(__bss_start, 0, __bss_end - __bss_start);
+
 #if DT_NODE_HAS_STATUS(DT_CHOSEN(zephyr_ccm), okay)
 	z_early_memset(&__ccm_bss_start, 0,
 		       (uintptr_t) &__ccm_bss_end
