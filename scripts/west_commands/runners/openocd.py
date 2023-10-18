@@ -279,12 +279,20 @@ class OpenOcdBinaryRunner(ZephyrBinaryRunner):
         # Extract entry point address from Elf to use it later with
         # "resume" command of OpenOCD.
         with open(self.elf_name, 'rb') as f:
-            ep_addr = f"0x{ELFFile(f).header['e_entry']:016x}"
-
+            elf = ELFFile(f);
+            ep_addr = f"0x{elf.header['e_entry']:016x}"
+            
+            sect = elf.get_section_by_name("device_states");
+            sect_addr = sect['sh_addr'];
+            sect_addr_str = f"0x{sect_addr:016x}"
+            
         pre_init_cmd = []
         for i in self.pre_init:
             pre_init_cmd.append("-c")
             pre_init_cmd.append(i)
+
+        my_mw_cmd = ['-c', 'mwb ' + sect_addr_str + ' 0x0 ' + '0x8']
+        
 
         pre_load_cmd = []
         load_image = []
@@ -308,6 +316,7 @@ class OpenOcdBinaryRunner(ZephyrBinaryRunner):
         cmd = (self.openocd_cmd + self.serial + self.cfg_cmd +
                pre_init_cmd + self.init_arg + self.targets_arg +
                pre_load_cmd + ['-c', self.reset_halt_cmd] +
+               my_mw_cmd +
                load_image +
                verify_image + post_verify_cmd +
                prologue)
