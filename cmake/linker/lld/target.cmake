@@ -100,6 +100,7 @@ function(toolchain_ld_link_elf)
     $<TARGET_OBJECTS:${OFFSETS_LIB}>
     ${LIB_INCLUDE_DIR}
     -L${PROJECT_BINARY_DIR}
+    -L"/home/user/sandbox/zephyr-sdk-0.16.3/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/thumb/v7-m/nofp"
     ${TOOLCHAIN_LIBS}
 
     ${TOOLCHAIN_LD_LINK_ELF_DEPENDENCIES}

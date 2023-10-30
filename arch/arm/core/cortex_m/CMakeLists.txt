@@ -4,6 +4,7 @@ zephyr_library()
 
 zephyr_library_sources(
   exc_exit.S
+  __aeabi_mem.S
   fault.c
   fault_s.S
   fpu.c

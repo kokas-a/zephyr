@@ -20,9 +20,15 @@
  */
 void z_device_state_init(void)
 {
-	STRUCT_SECTION_FOREACH(device, dev) {
-		z_object_init(dev);
-	}
+	// STRUCT_SECTION_FOREACH(device, dev) {
+	//TYPE_SECTION_FOREACH(struct device, device_area, dev) {
+
+		extern struct device _device_list_start[];
+		extern struct device _device_list_end[];
+
+		for (struct device * iterator = _device_list_start; iterator < _device_list_end;  iterator++)
+			z_object_init(iterator);
+
 }
 
 const struct device *z_impl_device_get_binding(const char *name)

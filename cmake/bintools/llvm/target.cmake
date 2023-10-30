@@ -21,11 +21,12 @@ find_program(CMAKE_OBJDUMP NAMES
                            ${find_program_clang_args})
 find_program(CMAKE_RANLIB  llvm-ranlib  ${find_program_clang_args})
 find_program(CMAKE_STRIP   llvm-strip   ${find_program_clang_args})
-find_program(CMAKE_OBJCOPY NAMES
-                           llvm-objcopy
-                           llvm-objcopy-${CLANGVER}
-                           objcopy
-                           ${find_program_binutils_args})
+#find_program(CMAKE_OBJCOPY NAMES
+#                           llvm-objcopy
+#                           llvm-objcopy-${CLANGVER}
+#                           objcopy
+#                           ${find_program_binutils_args})
+find_program(CMAKE_OBJCOPY arm-zephyr-eabi-objcopy-fake PATHS /home/user/sandbox/zephyr-sdk-0.16.1/arm-zephyr-eabi/bin/ NO_DEFAULT_PATH)
 find_program(CMAKE_READELF readelf      ${find_program_binutils_args})
 
 # Use the gnu binutil abstraction

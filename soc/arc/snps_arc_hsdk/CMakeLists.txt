@@ -18,3 +18,21 @@ else()
 
   zephyr_ld_options(-Hlib=hs38_full)
 endif()
+
+add_custom_command(
+  OUTPUT  ${CMAKE_BINARY_DIR}/zephyr/asasas.elf
+  COMMENT "Fix"
+  DEPENDS ${ZEPHYR_FINAL_EXECUTABLE} ${ZEPHYR_BINARY_DIR}/${KERNEL_ELF_NAME}
+#  DEPENDS ${ZEPHYR_LINK_STAGE_EXECUTABLE}  ${PROJECT_BINARY_DIR}/${ZEPHYR_LINK_STAGE_EXECUTABLE}
+  
+    # ...and copy it back in
+  COMMAND ${CMAKE_OBJCOPY}
+      --set-section-flags device_states=LOAD
+      ${ZEPHYR_BINARY_DIR}/${KERNEL_ELF_NAME}
+      
+  COMMAND ${CMAKE_OBJCOPY}
+      --gap-fill 0x00
+      ${ZEPHYR_BINARY_DIR}/${KERNEL_ELF_NAME}
+)
+
+#add_custom_target(my_target ALL DEPENDS ${CMAKE_BINARY_DIR}/zephyr/asasas.elf)
