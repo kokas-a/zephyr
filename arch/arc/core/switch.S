@@ -95,6 +95,65 @@ SECTION_FUNC(TEXT, z_arc_switch)
 
 	_load_new_thread_callee_regs
 
+#if defined(CONFIG_THREAD_LOCAL_STORAGE)
+	/* Get the new thread's tls pointer */
+	ld gp, [r2, _thread_offset_to_tls]
+
+#if CONFIG_RGF_NUM_BANKS != 1
+	/* syncronize gp with another bank: */
+	lr  r1, [_ARC_V2_STATUS32]
+	and r1, r1, _ARC_V2_STATUS32_RB(7)
+
+	breq r1, 0, _sync_with_fiq_bank /* current mode is non-firq */
+	nop
+	breq r1, 1, _sync_with_rirq_bank /*  current mode is firq */
+	nop
+	b _sync_end
+	nop
+
+_sync_with_fiq_bank:
+
+	lr r1, [_ARC_V2_USER_SP] /* save user sp if required */
+	push r1
+
+	sr gp, [_ARC_V2_USER_SP]
+
+	/* switch to fiq: */
+	lr ilink, [_ARC_V2_STATUS32]
+	or ilink, ilink, _ARC_V2_STATUS32_RB(1)
+	kflag ilink
+
+	lr gp, [_ARC_V2_USER_SP]
+
+	lr ilink, [_ARC_V2_STATUS32]
+	and ilink, ilink, ~_ARC_V2_STATUS32_RB(7)
+	kflag ilink
+
+	pop r1
+	sr  r1, [_ARC_V2_USER_SP] /* restore user sp if required */
+
+	b _sync_end
+	nop
+
+_sync_with_rirq_bank:
+
+	mov ilink, gp
+
+	/* switch to rirq: */
+	lr r1, [_ARC_V2_STATUS32]
+	and r1, r1, ~_ARC_V2_STATUS32_RB(7)
+	kflag r1
+
+	mov gp, ilink
+
+	lr ilink, [_ARC_V2_STATUS32]
+	or ilink, ilink, _ARC_V2_STATUS32_RB(1)
+	kflag ilink
+
+_sync_end:
+#endif
+#endif /* CONFIG_THREAD_LOCAL_STORAGE */
+
 	breq r3, _CAUSE_RIRQ, _switch_return_from_rirq
 	nop_s
 	breq r3, _CAUSE_FIRQ, _switch_return_from_firq
@@ -126,8 +185,8 @@ _switch_return_from_coop:
 
 
 .align 4
-_switch_return_from_rirq:
 _switch_return_from_firq:
+_switch_return_from_rirq:
 
 	_set_misc_regs_irq_switch_from_irq
 
