@@ -18,6 +18,7 @@
 		zephyr,osdp-uart = &usart2;
 		zephyr,sram = &sram0;
 		zephyr,flash = &flash0;
+		zephyr,canbus = &can1;
 	};
 
 	leds {
@@ -38,7 +39,6 @@
 };
 
 &clk_hse {
-	hse-bypass;
 	clock-frequency = <DT_FREQ_M(8)>; /* STLink 8MHz clock */
 	status = "okay";
 };
@@ -123,5 +123,12 @@ zephyr_udc0: &usb {
 	pinctrl-names = "default";
 	st,adc-clock-source = <SYNC>;
 	st,adc-prescaler = <2>;
+	status = "okay";
+};
+
+&can1 {
+	pinctrl-0 = <&can_tx_pb9 &can_rx_pb8>;
+	pinctrl-names = "default";
+	bus-speed = <500000>;
 	status = "okay";
 };
