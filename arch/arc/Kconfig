@@ -387,6 +387,7 @@ endmenu
 
 config MAIN_STACK_SIZE
 	default 4096 if 64BIT
+	default 768 if !64BIT
 
 config ISR_STACK_SIZE
 	default 4096 if 64BIT
