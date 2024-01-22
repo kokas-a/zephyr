@@ -13,37 +13,34 @@ K_THREAD_STACK_DEFINE(my_test_thread_stack, 512);
 
 static void tentry(void *a, void *b, void *c)
 {
-	printk("test\r\n");
-
-	while(1){
-		//k_msleep(2000);
-		k_sleep(K_MSEC(1000));
-	}
+	printf("Hello World from %s (%s)\n",
+		       k_is_user_context() ? "UserSpace!" : "privileged mode.",
+		       CONFIG_BOARD);
 }
 
-static volatile uint32_t sp_save;
+
 
 int main(void)
 {
 	//register uint32_t r28 asm ("sp");
 
-	k_tid_t new_thread = k_current_get();
+	k_tid_t current_thread = k_current_get();
 	uint8_t *c;
 	uint32_t counter = 0;
+	uint32_t sp_save;
 
-	void* stack_hi_addr = (void *)(new_thread->stack_info.start + new_thread->stack_info.size);
-	void* stack_low_addr=  (void *)new_thread->stack_info.start;
+	void* stack_hi_addr = (void *)(current_thread->stack_info.start + current_thread->stack_info.size);
+	void* stack_low_addr=  (void *)current_thread->stack_info.start;
 
 	printk("start (hi_addr) %p, end(low_addr) %p\r\n", stack_hi_addr, stack_low_addr);
 
 	 __asm__ __volatile__ ("mov %0, %%sp\n\t" :
 			 "=r" (sp_save):: "memory");
 
-	//sp_save = r28;
-
 	for(c = (uint8_t *)sp_save; c != stack_low_addr; c--){
 		*c = 0xFE;
 	}
+
 
 	k_thread_create(
 			&my_test_thread,
@@ -55,9 +52,14 @@ int main(void)
 			NULL,		/* p3 */
 			5 			/* prio */,
 			K_INHERIT_PERMS, /* options */
-			// K_FOREVER
-			K_NO_WAIT	/* delay */
+			 K_FOREVER
+			//K_NO_WAIT	/* delay */
 			);
+
+
+	k_thread_start(&my_test_thread);
+
+	k_thread_join(&my_test_thread, K_FOREVER);
 
 	for(c = (uint8_t *)sp_save; c != stack_low_addr; c--){
 		if(*c != 0xFE){

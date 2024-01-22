@@ -560,6 +560,18 @@ static int run_test(struct ztest_suite_node *suite, struct ztest_unit_test *test
 	 * running the tests.
 	 */
 	if (IS_ENABLED(CONFIG_MULTITHREADING)) {
+
+			uint32_t sp_save;
+			k_tid_t current_thread = k_current_get();
+			uint8_t *c;
+			uint32_t counter = 0;
+
+			void* stack_hi_addr = (void *)(current_thread->stack_info.start + current_thread->stack_info.size);
+			void* stack_low_addr=  (void *)current_thread->stack_info.start;
+
+			printk("start (hi_addr) %p, end(low_addr) %p\r\n", stack_hi_addr, stack_low_addr);
+
+/* point 0 measure: gcc 141, mw 157 */
 		get_start_time_cyc();
 		k_thread_create(&ztest_thread, ztest_thread_stack,
 				K_THREAD_STACK_SIZEOF(ztest_thread_stack),
@@ -567,19 +579,40 @@ static int run_test(struct ztest_suite_node *suite, struct ztest_unit_test *test
 				CONFIG_ZTEST_THREAD_PRIORITY,
 				K_INHERIT_PERMS, K_FOREVER);
 
+
+
+/* point 1 measure: gcc 112, mw 152 */
 		k_thread_access_grant(&ztest_thread, suite, test, suite->stats);
 		if (test->name != NULL) {
 			k_thread_name_set(&ztest_thread, test->name);
 		}
+
+		 __asm__ __volatile__ ("mov %0, %%sp\n\t" :
+				 "=r" (sp_save):: "memory");
+
+		for(c = (uint8_t *)sp_save; c != stack_low_addr; c--){
+			*c = 0xFE;
+		}
+
 		/* Only start the thread if we're not skipping the suite */
 		if (test_result != ZTEST_RESULT_SUITE_SKIP &&
 		    test_result != ZTEST_RESULT_SUITE_FAIL) {
 			k_thread_start(&ztest_thread);
 			k_thread_join(&ztest_thread, K_FOREVER);
 		}
+
+		for(c = (uint8_t *)sp_save; c != stack_low_addr; c--){
+			if(*c != 0xFE){
+				counter++;
+			}
+		}
+
+		printk("counter = %d\r\n", counter);
+
 	} else if (test_result != ZTEST_RESULT_SUITE_SKIP &&
 		   test_result != ZTEST_RESULT_SUITE_FAIL) {
 		__ztest_set_test_result(ZTEST_RESULT_PENDING);
+		printk("\r\nSINGLE\r\n");
 		get_start_time_cyc();
 		run_test_rules(/*is_before=*/true, test, data);
 		if (suite->before) {

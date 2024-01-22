@@ -28,7 +28,7 @@ config NUM_IRQS
 # may assume MPUv3 is just a subset of MPUv2.
 
 config ARC_MPU_VER
-	default 2
+	default 3
 
 source "soc/arc/snps_qemu/Kconfig.defconfig.em"
 source "soc/arc/snps_qemu/Kconfig.defconfig.hs"
