@@ -1,0 +1,6 @@
+identifier: lichee_d1_rv
+name: Lichee D1 
+type: mcu
+arch: riscv64
+toolchain:
+  - zephyr

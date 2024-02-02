@@ -1,0 +1,22 @@
+/dts-v1/;
+
+#include <aw_d1/d1_rv.dtsi>
+
+/ {
+
+	aliases {
+		uart-0 = &uart0;
+	};
+
+	chosen {
+		zephyr,sram = &ddr0;
+		zephyr,console = &uart0;
+		zephyr,shell-uart = &uart0;
+	};
+
+};
+
+&uart0 {
+	status = "okay";
+	current-speed = <115200>;
+};

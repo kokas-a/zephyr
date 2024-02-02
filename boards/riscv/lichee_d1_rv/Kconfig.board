@@ -1,0 +1,6 @@
+
+config BOARD_LICHEE_D1_RV
+	bool "Lichee D1 RV"
+	select 64BIT
+#	select SCHED_IPI_SUPPORTED
+#	select CPU_HAS_FPU_DOUBLE_PRECISION

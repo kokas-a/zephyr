@@ -1,0 +1,10 @@
+config SOC_AW_D1
+	bool "AllWinner D1 SoC"
+	select RISCV
+	select RISCV_PRIVILEGED
+	select RISCV_HAS_PLIC
+	select RISCV_ISA_RV64I
+	select RISCV_ISA_EXT_G
+	select RISCV_ISA_EXT_C
+#	select RISCV_ISA_EXT_V # V is not supported by zephyr
+	

@@ -1,0 +1,84 @@
+
+/ {
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	cpus {
+			timebase-frequency = <24000000>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+	
+			cpu0: cpu@0 {
+				compatible = "thead,c906", "riscv";
+				device_type = "cpu";
+				reg = <0>;
+//				clocks = <&ccu CLK_RISCV>;
+				clock-frequency = <24000000>;
+				d-cache-block-size = <64>;
+				d-cache-sets = <256>;
+				d-cache-size = <32768>;
+				i-cache-block-size = <64>;
+//				i-cache-sets = <128>;
+//				i-cache-size = <32768>;
+				mmu-type = "riscv,sv39";
+				riscv,isa = "rv64imafdc";
+				#cooling-cells = <2>;
+	
+				cpu0_intc: interrupt-controller {
+					compatible = "riscv,cpu-intc";
+					interrupt-controller;
+					#address-cells = <0>;
+					#interrupt-cells = <1>;
+				};
+			};
+		};
+		
+		soc {
+			compatible = "simple-bus";
+			ranges;
+			interrupt-parent = <&plic>;
+			dma-noncoherent;
+			#address-cells = <1>;
+			#size-cells = <1>;
+			
+//			plic: interrupt-controller@10000000 {
+//				compatible = "allwinner,sun20i-d1-plic",
+//					     "thead,c900-plic";
+//				reg = <0x10000000 0x4000000>;
+//				interrupts-extended = <&cpu0_intc 11>,
+//						      <&cpu0_intc 9>;
+//				interrupt-controller;
+//				riscv,ndev = <176>;
+//				#address-cells = <0>;
+//				#interrupt-cells = <2>;
+//			};
+			
+			
+			plic: interrupt-controller@0x10000000 {
+				compatible = "sifive,plic-1.0.0";
+				#interrupt-cells = <2>;
+				#address-cells = <1>;
+				interrupt-controller;
+				interrupts-extended = <&cpu0_intc 11>;
+				reg = <0x10000000 0x04000000>;
+				riscv,max-priority = <7>;
+				riscv,ndev = <186>;
+			};
+			
+				
+			uart0: serial@2500000 {
+				compatible = "snps,dw-apb-uart";
+				reg = <0x2500000 0x400>;
+				reg-io-width = <4>;
+				reg-shift = <2>;
+				interrupts = <18 1>;
+//				clocks = <&ccu CLK_BUS_UART0>;
+//				resets = <&ccu RST_BUS_UART0>;
+//				dmas = <&dma 14>, <&dma 14>;
+//				dma-names = "rx", "tx";
+				status = "disabled";
+			};
+		
+		};
+	
+};
