@@ -3,6 +3,7 @@ config SOC_AW_D1
 	select RISCV
 	select RISCV_PRIVILEGED
 	select RISCV_HAS_PLIC
+#	select RISCV_HAS_CLIC
 	select RISCV_ISA_RV64I
 	select RISCV_ISA_EXT_G
 	select RISCV_ISA_EXT_C

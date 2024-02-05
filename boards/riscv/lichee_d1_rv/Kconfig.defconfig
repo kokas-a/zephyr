@@ -3,7 +3,7 @@
 if BOARD_LICHEE_D1_RV
 
 config BOARD
-	default "hifive_unleashed"
+	default "lichee_d1_rv"
 
 config SYS_CLOCK_TICKS_PER_SEC
 	default 1000
