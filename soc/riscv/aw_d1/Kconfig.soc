@@ -7,4 +7,3 @@ config SOC_AW_D1
 	select RISCV_ISA_EXT_G
 	select RISCV_ISA_EXT_C
 #	select RISCV_ISA_EXT_V # V is not supported by zephyr
-	

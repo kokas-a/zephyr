@@ -1,0 +1,7 @@
+
+
+description: alwinner d1 core
+
+compatible: "thead,c906"
+
+include: riscv,cpus.yaml

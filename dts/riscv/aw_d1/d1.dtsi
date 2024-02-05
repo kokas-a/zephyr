@@ -14,10 +14,10 @@
 				reg = <0>;
 //				clocks = <&ccu CLK_RISCV>;
 				clock-frequency = <24000000>;
-				d-cache-block-size = <64>;
-				d-cache-sets = <256>;
-				d-cache-size = <32768>;
-				i-cache-block-size = <64>;
+//				d-cache-block-size = <64>;
+//				d-cache-sets = <256>;
+//				d-cache-size = <32768>;
+//				i-cache-block-size = <64>;
 //				i-cache-sets = <128>;
 //				i-cache-size = <32768>;
 				mmu-type = "riscv,sv39";
@@ -54,7 +54,7 @@
 //			};
 			
 			
-			plic: interrupt-controller@0x10000000 {
+			plic: interrupt-controller@10000000 {
 				compatible = "sifive,plic-1.0.0";
 				#interrupt-cells = <2>;
 				#address-cells = <1>;
@@ -65,13 +65,24 @@
 				riscv,ndev = <186>;
 			};
 			
+			clint: clint@14000000 {
+//				compatible = "allwinner,sun20i-d1-clint",
+//				     "thead,c900-clint";
+				compatible = "sifive,clint0";
+				reg = <0x14000000 0xc000>;
+				interrupts-extended = <&cpu0_intc 3>,
+						      <&cpu0_intc 7>;
+			};
+			
 				
 			uart0: serial@2500000 {
-				compatible = "snps,dw-apb-uart";
+				compatible = "ns16550", "snps,dw-apb-uart";
 				reg = <0x2500000 0x400>;
-				reg-io-width = <4>;
+//				reg-io-width = <4>;
 				reg-shift = <2>;
+				interrupt-parent = <&plic>;
 				interrupts = <18 1>;
+				clock-frequency = <24000000>;
 //				clocks = <&ccu CLK_BUS_UART0>;
 //				resets = <&ccu RST_BUS_UART0>;
 //				dmas = <&dma 14>, <&dma 14>;
