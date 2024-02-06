@@ -1,0 +1,7 @@
+
+
+description: THead C900 RISC-V Core-Local Interruptor.
+
+compatible: "thead,c900-clint"
+
+include: sifive,clint0.yaml

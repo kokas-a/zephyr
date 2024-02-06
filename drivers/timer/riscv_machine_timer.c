@@ -71,6 +71,17 @@
 #define MTIME_REG	(DT_INST_REG_ADDR_U64(0) + 8)
 #define MTIMECMP_REG	(DT_INST_REG_ADDR_U64(0) + 16)
 #define TIMER_IRQN	DT_INST_IRQN(0)
+/* thead,c900-clint*/
+#elif DT_HAS_COMPAT_STATUS_OKAY(thead_c900_clint)
+#define DT_DRV_COMPAT 	thead_c900_clint
+
+/* T-Head C906/C910 CPU cores include an implementation of CLINT too,
+ * however their implementation lacks a memory-mapped MTIME register,
+ * thus not  compatible with SiFive ones
+ */
+#define MTIMECMP_REG    (DT_INST_REG_ADDR(0) + 0x4000U)
+#define TIMER_IRQN	    DT_INST_IRQ_BY_IDX(0, 1, irq)
+#define MTIMER_HAS_NO_MMAP_REGS
 #endif
 
 #define CYC_PER_TICK (uint32_t)(sys_clock_hw_cycles_per_sec() \
@@ -123,7 +134,12 @@ static void set_divider(void)
 static uint64_t mtime(void)
 {
 #ifdef CONFIG_64BIT
-	return *(volatile uint64_t *)MTIME_REG;
+	#ifdef MTIMER_HAS_NO_MMAP_REGS
+		volatile uint64_t tmp = csr_read(time);
+		return tmp;
+	#else
+		return *(volatile uint64_t *)MTIME_REG;
+	#endif /* MTIMER_HAS_NO_MMAP_REGS */
 #else
 	volatile uint32_t *r = (uint32_t *)MTIME_REG;
 	uint32_t lo, hi;
