@@ -617,8 +617,6 @@ static int uart_console_init(void)
 
 	uart_console_hook_install();
 
-	printk("\r\nD1 uart init done\r\n");
-
 	return 0;
 }
 

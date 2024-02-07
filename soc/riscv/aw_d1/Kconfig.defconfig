@@ -17,5 +17,8 @@ config UART_NS16550_ACCESS_WORD_ONLY
 	
 config NUM_IRQS
 	default 223
+	
+config RISCV_GP
+	default y	
 
 endif #SOC_AW_D1
