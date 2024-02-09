@@ -14,12 +14,12 @@
 				reg = <0>;
 //				clocks = <&ccu CLK_RISCV>;
 				clock-frequency = <24000000>;
-//				d-cache-block-size = <64>;
-//				d-cache-sets = <256>;
-//				d-cache-size = <32768>;
-//				i-cache-block-size = <64>;
-//				i-cache-sets = <128>;
-//				i-cache-size = <32768>;
+				d-cache-block-size = <64>;
+				d-cache-sets = <256>;
+				d-cache-size = <32768>;
+				i-cache-block-size = <64>;
+				i-cache-sets = <128>;
+				i-cache-size = <32768>;
 				mmu-type = "riscv,sv39";
 				riscv,isa = "rv64imafdc";
 				#cooling-cells = <2>;
@@ -59,18 +59,18 @@
 				#interrupt-cells = <2>;
 				#address-cells = <1>;
 				interrupt-controller;
-				interrupts-extended = <&cpu0_intc 11>;
+				interrupts-extended = <&cpu0_intc 11 &cpu0_intc 9>;
 				reg = <0x10000000 0x04000000>;
 				riscv,max-priority = <7>;
-				riscv,ndev = <186>;
+				riscv,ndev = <176>;
 			};
 			
 			clint: clint@14000000 {
 				compatible = "allwinner,sun20i-d1-clint",
 				     "thead,c900-clint";
 				reg = <0x14000000 0xc000>;
-				interrupts-extended = <&cpu0_intc 3>,
-						      <&cpu0_intc 7>;
+				interrupts-extended = <&cpu0_intc 3 &cpu0_intc 7>;
+				interrupt-names = "soft0", "timer0";
 			};
 			
 				

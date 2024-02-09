@@ -3,8 +3,6 @@ if SOC_AW_D1
 config SOC
 	default "aw_d1"
 
-
-#FIXME:
 config SYS_CLOCK_HW_CYCLES_PER_SEC
 	default 24000000
 
@@ -14,11 +12,11 @@ config RISCV_SOC_INTERRUPT_INIT
 config UART_NS16550_ACCESS_WORD_ONLY
 	default y
 	depends on UART_NS16550
-	
+
 config NUM_IRQS
 	default 223
-	
+
 config RISCV_GP
-	default y	
+	default y
 
 endif #SOC_AW_D1

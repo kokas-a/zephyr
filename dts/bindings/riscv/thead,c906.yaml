@@ -5,3 +5,34 @@ description: alwinner d1 core
 compatible: "thead,c906"
 
 include: riscv,cpus.yaml
+
+properties:
+  d-cache-block-size:
+    type: int
+    required: true
+    description: Data Cache block size
+
+  d-cache-sets:
+    type: int
+    required: true
+    description: Data Cache sets
+
+  d-cache-size:
+    type: int
+    required: true
+    description: Data Cache size
+
+  i-cache-block-size:
+    type: int
+    required: true
+    description: Instruction Cache block size
+
+  i-cache-sets:
+    type: int
+    required: true
+    description: Instruction Cache sets
+
+  i-cache-size:
+    type: int
+    required: true
+    description: Instruction Cache size

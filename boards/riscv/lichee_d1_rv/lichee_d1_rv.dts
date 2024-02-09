@@ -3,6 +3,8 @@
 #include <aw_d1/d1_rv.dtsi>
 
 / {
+	model = "Sipeed Lichee D1 RV";
+	compatible = "sipeed,lichee_d1_rv";
 
 	aliases {
 		uart-0 = &uart0;
