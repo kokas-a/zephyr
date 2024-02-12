@@ -1,0 +1,4 @@
+# Copyright (c) 2024 Synopsys
+# SPDX-License-Identifier: Apache-2.0
+
+source "soc/riscv/snps_av5rmx/*/Kconfig.defconfig.series"

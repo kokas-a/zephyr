@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: Apache-2.0
+
+zephyr_sources(soc.c)
+zephyr_sources_ifdef(CONFIG_RISCV_SOC_HAS_CUSTOM_IRQ_LOCK_OPS custom_soc_irq_lock.c)
+
+if(COMPILER STREQUAL gcc)
+
+elseif(COMPILER STREQUAL clang)
+  zephyr_sources(div.S)
+
+  zephyr_compile_options_ifdef(CONFIG_SOC_SERIES_RMX5X -march=rv32gc -mno-relax)
+
+else ()
+# for CCAC:
+  zephyr_compile_options_ifdef(CONFIG_SOC_SERIES_RMX5X
+					-av5rmx -Zicsr -Zifencei -Zihintpause -Zba -Zbb
+					-Zbs -Zca -Zcb -Zcmp -Zcmt -Za -Zm -Zicbom)
+
+	zephyr_ld_options(-Hlib=rmx500)
+endif()
+
+set(SOC_LINKER_SCRIPT ${ZEPHYR_BASE}/include/zephyr/arch/riscv/common/linker.ld CACHE INTERNAL "")

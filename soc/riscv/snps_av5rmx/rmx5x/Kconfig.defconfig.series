@@ -1,0 +1,31 @@
+# Copyright (c) 2024 Synopsys
+# SPDX-License-Identifier: Apache-2.0
+
+if SOC_SERIES_RMX5X
+
+config SOC_SERIES
+	default "rmx5x"
+	
+config SYS_CLOCK_HW_CYCLES_PER_SEC
+	default 5000000
+
+config RISCV_SOC_INTERRUPT_INIT
+	default y
+
+config 2ND_LVL_ISR_TBL_OFFSET
+	default 12
+
+config 2ND_LVL_INTR_00_OFFSET
+	default 11
+
+config UART_NS16550_ACCESS_WORD_ONLY
+	default y
+	depends on UART_NS16550
+
+config NUM_IRQS
+	default 128
+
+config RISCV_GP
+	default y	
+
+endif # SOC_SERIES_RMX5X

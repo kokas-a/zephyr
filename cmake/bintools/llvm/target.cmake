@@ -21,11 +21,15 @@ find_program(CMAKE_OBJDUMP NAMES
                            ${find_program_clang_args})
 find_program(CMAKE_RANLIB  llvm-ranlib  ${find_program_clang_args})
 find_program(CMAKE_STRIP   llvm-strip   ${find_program_clang_args})
-find_program(CMAKE_OBJCOPY NAMES
-                           llvm-objcopy
-                           llvm-objcopy-${CLANGVER}
-                           objcopy
-                           ${find_program_binutils_args})
+#gap-fill error
+#find_program(CMAKE_OBJCOPY NAMES
+#                           llvm-objcopy
+#                          llvm-objcopy-${CLANGVER}
+#                           objcopy
+#                           ${find_program_binutils_args})
+                           
+find_program(CMAKE_OBJCOPY riscv64-zephyr-elf-objcopy PATHS /home/user/sandbox/zephyr-sdk-0.16.3/riscv64-zephyr-elf/bin/ NO_DEFAULT_PATH)
+
 find_program(CMAKE_READELF NAMES
                            llvm-readelf
                            llvm-readelf-${CLANGVER}

@@ -1,0 +1,2 @@
+config BOARD_SNPS_RMX500
+	bool "Synopsys rmx500"

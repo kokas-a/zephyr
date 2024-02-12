@@ -92,7 +92,7 @@ config RISCV_SOC_HAS_CUSTOM_IRQ_HANDLING
 	  and clear all pending interrupts.
 
 config RISCV_SOC_HAS_CUSTOM_IRQ_LOCK_OPS
-	bool
+	bool "FIXME: make user-configurable"
 	help
 	  Hidden option to allow SoC to overwrite arch_irq_lock(),
 	  arch_irq_unlock() and arch_irq_unlocked() functions with

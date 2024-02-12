@@ -72,6 +72,13 @@ if(NOT "${ARCH}" STREQUAL "posix")
   get_filename_component(RTLIB_NAME_WITH_PREFIX ${RTLIB_FILE_NAME} NAME_WLE)
   string(REPLACE lib "" RTLIB_NAME ${RTLIB_NAME_WITH_PREFIX})
 
+  if(CONFIG_RISCV)
+    message(FIXME: Replace path with ZEPHYR_SDK_INSTALL_DIR )
+#  	set(RTLIB_DIR /usr/lib/gcc/riscv64-unknown-elf/12.2.0/rv32imafdc/ilp32d)
+	set(RV_TOOLS /home/user/sandbox/zephyr-sdk-0.16.3/riscv64-zephyr-elf)
+	set(RTLIB_DIR ${RV_TOOLS}/lib/gcc/riscv64-zephyr-elf/12.2.0/rv32imafd_zicsr_zifencei/ilp32d/)
+  endif()
+
   list(APPEND LIB_INCLUDE_DIR -L${RTLIB_DIR})
   list(APPEND TOOLCHAIN_LIBS ${RTLIB_NAME})
 

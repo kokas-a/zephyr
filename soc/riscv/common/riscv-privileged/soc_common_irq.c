@@ -41,7 +41,7 @@ void z_riscv_irq_priority_set(unsigned int irq, unsigned int prio, uint32_t flag
 
 void arch_irq_enable(unsigned int irq)
 {
-	uint32_t mie;
+	volatile uint32_t mie_reg_val;
 
 #if defined(CONFIG_RISCV_HAS_PLIC)
 	unsigned int level = irq_get_level(irq);
@@ -56,7 +56,16 @@ void arch_irq_enable(unsigned int irq)
 	 * CSR mie register is updated using atomic instruction csrrs
 	 * (atomic read and set bits in CSR register)
 	 */
-	mie = csr_read_set(mie, 1 << irq);
+	mie_reg_val = csr_read_set(mie, 1 << irq);
+#if 0
+	mie_reg_val = csr_read(mie);
+	mie_reg_val |= 1 << irq;
+	csr_write(mie, mie_reg_val);
+
+	mie_reg_val = 0;
+	mie_reg_val = csr_read(mie);
+#endif
+	return;
 }
 
 void arch_irq_disable(unsigned int irq)
