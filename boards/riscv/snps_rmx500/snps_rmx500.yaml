@@ -1,0 +1,6 @@
+identifier: snps_rmx500
+name: Synopsys rmx500 
+type: mcu
+arch: riscv32
+toolchain:
+  - zephyr
