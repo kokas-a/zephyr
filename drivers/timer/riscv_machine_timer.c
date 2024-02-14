@@ -75,6 +75,9 @@
 #elif DT_HAS_COMPAT_STATUS_OKAY(snps_clint0)
 #define DT_DRV_COMPAT snps_clint0
 
+#define MTIMER_HAS_NO_MMAP_REGS
+#define TIMER_IRQN	DT_INST_IRQN(0)
+
 #endif
 
 #define CYC_PER_TICK (uint32_t)(sys_clock_hw_cycles_per_sec() \
@@ -92,27 +95,34 @@ static uint32_t last_elapsed;
 const int32_t z_sys_timer_irq_for_test = TIMER_IRQN;
 #endif
 
+#ifndef MTIMER_HAS_NO_MMAP_REGS
 static uintptr_t get_hart_mtimecmp(void)
 {
 	return MTIMECMP_REG + (arch_proc_id() * 8);
 }
+#endif
 
-static void set_mtimecmp(uint64_t time)
+static void set_mtimecmp(uint64_t new_time)
 {
-#ifdef CONFIG_64BIT
-	*(volatile uint64_t *)get_hart_mtimecmp() = time;
+#ifdef MTIMER_HAS_NO_MMAP_REGS
+	/* The mtime register has a 64-bit precision on all RV32 and RV64 systems */
+	csr_write(time, new_time);
 #else
-	volatile uint32_t *r = (uint32_t *)get_hart_mtimecmp();
+	#ifdef CONFIG_64BIT
+		*(volatile uint64_t *)get_hart_mtimecmp() = new_time;
+	#else
+		volatile uint32_t *r = (uint32_t *)get_hart_mtimecmp();
 
-	/* Per spec, the RISC-V MTIME/MTIMECMP registers are 64 bit,
-	 * but are NOT internally latched for multiword transfers.  So
-	 * we have to be careful about sequencing to avoid triggering
-	 * spurious interrupts: always set the high word to a max
-	 * value first.
-	 */
-	r[1] = 0xffffffff;
-	r[0] = (uint32_t)time;
-	r[1] = (uint32_t)(time >> 32);
+		/* Per spec, the RISC-V MTIME/MTIMECMP registers are 64 bit,
+		 * but are NOT internally latched for multiword transfers.  So
+		 * we have to be careful about sequencing to avoid triggering
+		 * spurious interrupts: always set the high word to a max
+		 * value first.
+		 */
+		r[1] = 0xffffffff;
+		r[0] = (uint32_t)new_time;
+		r[1] = (uint32_t)(new_time >> 32);
+	#endif
 #endif
 }
 
@@ -126,19 +136,24 @@ static void set_divider(void)
 
 static uint64_t mtime(void)
 {
-#ifdef CONFIG_64BIT
-	return *(volatile uint64_t *)MTIME_REG;
+#ifdef MTIMER_HAS_NO_MMAP_REGS
+	/* The mtime register has a 64-bit precision on all RV32 and RV64 systems */
+	return *(volatile uint64_t *)csr_read(time);
 #else
-	volatile uint32_t *r = (uint32_t *)MTIME_REG;
-	uint32_t lo, hi;
+	#ifdef CONFIG_64BIT
+		return *(volatile uint64_t *)MTIME_REG;
+	#else
+		volatile uint32_t *r = (uint32_t *)MTIME_REG;
+		uint32_t lo, hi;
 
-	/* Likewise, must guard against rollover when reading */
-	do {
-		hi = r[1];
-		lo = r[0];
-	} while (r[1] != hi);
+		/* Likewise, must guard against rollover when reading */
+		do {
+			hi = r[1];
+			lo = r[0];
+		} while (r[1] != hi);
 
-	return (((uint64_t)hi) << 32) | lo;
+		return (((uint64_t)hi) << 32) | lo;
+	#endif
 #endif
 }
 
