@@ -57,13 +57,13 @@
 				interrupt-names = "soft0", "timer0";
 			};
 
-			uart0: serial@2500000 {
+			uart0: serial@f0000000 {
 				compatible = "ns16550", "snps,dw-apb-uart";
-				reg = <0x2500000 0x400>;
+				reg = <0xf0000000 0x400>;
 				reg-shift = <2>;
 				interrupt-parent = <&plic>;
-				interrupts = <18 1>;
-				clock-frequency = <24000000>;
+				interrupts = <24 1>;
+				clock-frequency = <50000000>;
 				status = "disabled";
 			};
 
