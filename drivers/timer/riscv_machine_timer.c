@@ -101,10 +101,10 @@ static uintptr_t get_hart_mtimecmp(void)
 	return MTIMECMP_REG + (arch_proc_id() * 8);
 }
 
-static void set_mtimecmp(uint64_t new_time)
+static void set_mtimecmp(uint64_t time)
 {
 #ifdef CONFIG_64BIT
-	*(volatile uint64_t *)get_hart_mtimecmp() = new_time;
+	*(volatile uint64_t *)get_hart_mtimecmp() = time;
 #else
 	volatile uint32_t *r = (uint32_t *)get_hart_mtimecmp();
 
@@ -115,8 +115,8 @@ static void set_mtimecmp(uint64_t new_time)
 	 * value first.
 	 */
 	r[1] = 0xffffffff;
-	r[0] = (uint32_t)new_time;
-	r[1] = (uint32_t)(new_time >> 32);
+	r[0] = (uint32_t)time;
+	r[1] = (uint32_t)(time >> 32);
 #endif
 }
 
