@@ -3,3 +3,4 @@
 	nsim_isa_big_endian=0
 	nsim_mem-dev=clint,base=0x00004000,size=4096
 	nsim_mem-dev=uart0,kind=dwuart,base=0xf0000000,irq=24
+	nsim_mem-dev=plic,base=0xf8000000,size=0x04000000,interrupts=128,priorities=16

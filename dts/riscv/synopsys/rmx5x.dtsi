@@ -3,7 +3,7 @@
 	#size-cells = <1>;
 
 	cpus {
-			timebase-frequency = <24000000>;
+			timebase-frequency = <5000000>;
 			#address-cells = <1>;
 			#size-cells = <0>;
 
@@ -11,7 +11,7 @@
 				compatible = "snps,av5rmx", "riscv";
 				device_type = "cpu";
 				reg = <0>;
-				clock-frequency = <24000000>;
+				clock-frequency = <5000000>;
 //				d-cache-block-size = <64>;
 //				d-cache-sets = <256>;
 //				d-cache-size = <32768>;
@@ -39,15 +39,15 @@
 			#address-cells = <1>;
 			#size-cells = <1>;
 
-			plic: interrupt-controller@10000000 {
+			plic: interrupt-controller@f8000000 {
 				compatible = "sifive,plic-1.0.0";
 				#interrupt-cells = <2>;
 				#address-cells = <1>;
 				interrupt-controller;
 				interrupts-extended = <&cpu0_intc 11 &cpu0_intc 9>;
-				reg = <0x10000000 0x04000000>;
-				riscv,max-priority = <7>;
-				riscv,ndev = <176>;
+				reg = <0xf8000000 0x04000000>;
+				riscv,max-priority = <16>;
+				riscv,ndev = <128>;
 			};
 
 			clint: clint@00004000 {

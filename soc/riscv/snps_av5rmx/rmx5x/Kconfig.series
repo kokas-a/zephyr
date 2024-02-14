@@ -20,4 +20,3 @@ config SOC_SERIES_RMX5X
 	select RISCV_ISA_EXT_C
 #	select RISCV_ISA_EXT_V # V is not supported by zephyr
 	select ATOMIC_OPERATIONS_BUILTIN
-	

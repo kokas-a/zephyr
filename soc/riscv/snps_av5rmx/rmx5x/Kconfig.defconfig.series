@@ -7,7 +7,7 @@ config SOC_SERIES
 	default "rmx5x"
 	
 config SYS_CLOCK_HW_CYCLES_PER_SEC
-	default 24000000
+	default 5000000
 
 config RISCV_SOC_INTERRUPT_INIT
 	default y	
@@ -17,7 +17,7 @@ config UART_NS16550_ACCESS_WORD_ONLY
 	depends on UART_NS16550
 
 config NUM_IRQS
-	default 223
+	default 128
 
 config RISCV_GP
 	default y	
