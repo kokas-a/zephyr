@@ -50,9 +50,9 @@
 				riscv,ndev = <176>;
 			};
 
-			clint: clint@14000000 {
+			clint: clint@00004000 {
 				compatible = "snps,clint0";
-				reg = <0x14000000 0xc000>;
+				reg = <0x00004000 0x1000>;
 				interrupts-extended = <&cpu0_intc 3 &cpu0_intc 7>;
 				interrupt-names = "soft0", "timer0";
 			};
