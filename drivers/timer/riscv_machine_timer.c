@@ -77,7 +77,7 @@
 
 #define MTIME_REG	DT_INST_REG_ADDR(0)
 #define MTIMECMP_REG	(DT_INST_REG_ADDR(0) + 8)
-#define TIMER_IRQN	DT_INST_IRQN(0)
+#define TIMER_IRQN	DT_INST_IRQ_BY_IDX(0, 1, irq)
 
 #endif
 
