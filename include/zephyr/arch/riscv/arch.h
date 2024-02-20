@@ -225,6 +225,12 @@ struct arch_mem_domain {
 	unsigned int pmp_update_nr;
 };
 
+#ifdef CONFIG_RISCV_SOC_HAS_CUSTOM_IRQ_LOCK_OPS
+extern unsigned int z_soc_irq_lock(void);
+extern void z_soc_irq_unlock(unsigned int key);
+extern bool z_soc_irq_unlocked(unsigned int key);
+#endif
+
 extern void z_irq_spurious(const void *unused);
 
 /*
