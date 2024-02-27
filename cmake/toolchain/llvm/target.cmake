@@ -33,6 +33,13 @@ elseif("${ARCH}" STREQUAL "x86")
   else()
     set(triple i686-pc-none-elf)
   endif()
+
+elseif("${ARCH}" STREQUAL "riscv")
+  if(CONFIG_64BIT)
+    set(triple riscv32)
+  else()
+    set(triple riscv64)
+  endif()
 endif()
 
 if(DEFINED triple)

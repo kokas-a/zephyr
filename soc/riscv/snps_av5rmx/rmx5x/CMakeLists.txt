@@ -1,14 +1,15 @@
 # SPDX-License-Identifier: Apache-2.0
 
 zephyr_sources(soc.c)
+zephyr_sources_ifdef(CONFIG_RISCV_SOC_HAS_CUSTOM_IRQ_LOCK_OPS custom_soc_irq_lock.c)
 
 if(COMPILER STREQUAL gcc)
 
 elseif(COMPILER STREQUAL clang)
   zephyr_sources(div.S)
-  
-  zephyr_compile_options_ifdef(CONFIG_SOC_SERIES_RMX5X 
-			       	--target=riscv32 -march=rv32gc -mno-relax)
+
+  zephyr_compile_options_ifdef(CONFIG_SOC_SERIES_RMX5X -march=rv32gc -mno-relax)
+
 else ()
 # for CCAC:
 #  zephyr_compile_options_ifdef(CONFIG_SOC_SERIES_RMX5X 

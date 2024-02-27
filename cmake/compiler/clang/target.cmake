@@ -72,6 +72,8 @@ if(NOT "${ARCH}" STREQUAL "posix")
   get_filename_component(RTLIB_NAME_WITH_PREFIX ${RTLIB_FILE_NAME} NAME_WLE)
   string(REPLACE lib "" RTLIB_NAME ${RTLIB_NAME_WITH_PREFIX})
 
+	set(RTLIB_DIR /usr/lib/gcc/riscv64-unknown-elf/12.2.0/rv32imafdc/ilp32d)
+
   list(APPEND LIB_INCLUDE_DIR -L${RTLIB_DIR})
   list(APPEND TOOLCHAIN_LIBS ${RTLIB_NAME})
 
