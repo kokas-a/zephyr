@@ -4,7 +4,8 @@
 choice LLVM_LINKER
 	prompt "LLVM Linker"
 	depends on "${ZEPHYR_TOOLCHAIN_VARIANT}" = "llvm"
-	default LLVM_USE_LD
+#FIXME: set default LLVM_USE_LLD for CONFIG_BOARD_SNPS_RMX500(rv32)
+	default LLVM_USE_LLD
 
 config LLVM_USE_LD
 	bool "GNU ld"
