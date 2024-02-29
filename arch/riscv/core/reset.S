@@ -22,7 +22,16 @@ GTEXT(riscv_cpu_sp)
 GTEXT(arch_secondary_cpu_init)
 
 #if CONFIG_INCLUDE_RESET_VECTOR
-SECTION_FUNC(reset, __reset)
+
+#ifdef __CCAC__
+	.section .\&reset\&.\&__reset, "ax"
+	FUNC_CODE()
+	PERFOPT_ALIGN
+	__reset :
+	FUNC_INSTR(__reset)
+#else
+	SECTION_FUNC(reset, __reset)
+#endif
 	/*
 	 * jump to __initialize
 	 * use call opcode in case __initialize is far away.

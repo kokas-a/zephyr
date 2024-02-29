@@ -59,9 +59,15 @@
 	.type symbol, @object
 .endm
 
+.macro weak_text_mwdt, __symbol__
+	.weak __symbol__
+	.type __symbol__, @function
+.endm
+
 #define GTEXT(sym) glbl_text_mwdt sym
 #define GDATA(sym) glbl_data_mwdt sym
 #define WDATA(sym) weak_data_mwdt sym
+#define WTEXT(sym) weak_text_mwdt sym
 
 #else /* defined(_ASMLANGUAGE) */
 
