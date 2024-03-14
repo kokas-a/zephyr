@@ -109,16 +109,7 @@ GTEXT(_isr_wrapper)
 /*
  * Handler called upon each exception/interrupt/fault
  */
- #ifdef __CCAC__
-	.section .\&exception.entry\&.\&_isr_wrapper, "ax"
-	FUNC_CODE()
-	PERFOPT_ALIGN
-	_isr_wrapper :
-	FUNC_INSTR(_isr_wrapper)
-#else
-	SECTION_FUNC(exception.entry, _isr_wrapper)
-#endif
-
+SECTION_FUNC(exception.entry, _isr_wrapper)
 
 /* Provide requested alignment, which depends e.g. on MTVEC format */
 .balign CONFIG_RISCV_TRAP_HANDLER_ALIGNMENT

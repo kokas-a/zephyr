@@ -35,16 +35,7 @@ GTEXT(z_riscv_configure_stack_guard)
 GTEXT(z_riscv_fpu_thread_context_switch)
 
 /* void z_riscv_switch(k_thread_t *switch_to, k_thread_t *switch_from) */
-#ifdef __CCAC__
-	.section .\&TEXT\&.\&z_riscv_switch, "ax"
-	FUNC_CODE()
-	PERFOPT_ALIGN
-	z_riscv_switch :
-	FUNC_INSTR(z_riscv_switch)
-#else
-	SECTION_FUNC(TEXT, z_riscv_switch)
-#endif
-
+SECTION_FUNC(TEXT, z_riscv_switch)
 
 	/* Save the old thread's callee-saved registers */
 	DO_CALLEE_SAVED(sr, a1)

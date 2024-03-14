@@ -14,17 +14,7 @@ GTEXT(__start)
 GTEXT(__initialize)
 GTEXT(_isr_wrapper)
 
-#ifdef __CCAC__
-	.section .\&vectors\&.\&__start, "ax"
-	FUNC_CODE()
-	PERFOPT_ALIGN
-	__start :
-	FUNC_INSTR(__start)
-#else
-	SECTION_FUNC(vectors, __start)
-#endif
-
-
+SECTION_FUNC(vectors, __start)
 #if defined(CONFIG_RISCV_GP)
 	/* Initialize global pointer */
 	.option push
