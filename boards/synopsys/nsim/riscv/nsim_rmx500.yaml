@@ -1,0 +1,16 @@
+identifier: nsim_rmx500
+name: Synopsys nSIM rmx500 
+simulation: nsim
+simulation_exec: nsimdrv
+type: sim
+arch: riscv32
+toolchain:
+  - zephyr
+  - cross-compile
+  - arcmwdt
+testing:
+  ignore_tags:
+    - net
+    - bluetooth
+vendor: snps
+  

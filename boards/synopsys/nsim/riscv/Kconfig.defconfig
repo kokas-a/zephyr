@@ -1,0 +1,9 @@
+if BOARD_NSIM_RMX500
+
+config BOARD
+	default "nsim_rmx500"
+
+config SYS_CLOCK_TICKS_PER_SEC
+	default 1000
+
+endif #BOARD_NSIM_RMX500

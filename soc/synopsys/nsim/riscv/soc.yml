@@ -1,0 +1,5 @@
+series:
+- name: nsim1
+  socs:
+  - name: nsim_rmx500
+

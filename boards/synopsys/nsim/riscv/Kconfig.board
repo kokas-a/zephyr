@@ -1,0 +1,2 @@
+config BOARD_NSIM_RMX500
+	bool "Synopsys nSIM rmx500"

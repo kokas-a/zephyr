@@ -1,0 +1,17 @@
+# Copyright (c) 2018 Synopsys, Inc. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+config SOC_NSIM_RV
+	bool
+
+config SOC_NSIM_RMX500
+	bool
+	select SOC_NSIM_RV
+	help
+	  Synopsys RISCV Rmx500 in nSIM
+
+config SOC
+	default "nsim_rmx500" if SOC_NSIM_RMX500
+
+config SOC_SERIES
+	default "nsim_rmx" if SOC_NSIM_RV
