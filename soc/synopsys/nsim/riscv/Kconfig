@@ -3,3 +3,10 @@
 
 config SOC_NSIM_RV
 	select RISCV
+	
+# Strange compilers behavior: 
+# -- zephyr compiler does not work correct without
+# CONFIG_RISCV_SOC_HAS_CUSTOM_IRQ_LOCK_OPS macro (should be no-inlined???).
+# -- cross-compile works fine with CONFIG_RISCV_SOC_HAS_CUSTOM_IRQ_LOCK_OPS=n
+# --llvm does not work correct at all (some irq issue)
+	select RISCV_SOC_HAS_CUSTOM_IRQ_LOCK_OPS

@@ -1,5 +1,5 @@
 board:
-  name: nsim1
+  name: nsim_rmx500
   vendor: snps
   socs:
   - name: nsim_rmx500
